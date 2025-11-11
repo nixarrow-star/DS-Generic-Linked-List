@@ -161,15 +161,15 @@ void *list_pop_at(struct list *list, size_t index)
         list->first_node = node_to_destroy->next;
         void *data = node_to_destroy->data;
         free(node_to_destroy);
+        list->size--;
         return data;
     }
 
     //Go to the place to pop
     struct node *cur_node = list->first_node;
-    while(index-1 > 0)
+    for (size_t i = 0; i < index - 1; i++)
     {
         cur_node = cur_node->next;
-        index--;
     }
 
     struct node *node_to_destroy = cur_node->next;
