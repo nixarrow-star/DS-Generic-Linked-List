@@ -139,3 +139,69 @@ void *list_get_at(struct list *list, size_t index)
 
     return cur_node->data;
 }
+
+//Pop and return the data at index index
+void *list_pop_at(struct list *list, size_t index)
+{
+    if(list == NULL)
+    {
+        return NULL;
+    }
+
+    //If invalid index
+    if(index >= list->size)
+    {
+        return NULL;
+    }
+
+    //If it is first data
+    if(index == 0)
+    {
+        struct node *node_to_destroy = list->first_node;
+        list->first_node = node_to_destroy->next;
+        void *data = node_to_destroy->data;
+        free(node_to_destroy);
+        return data;
+    }
+
+    //Go to the place to pop
+    struct node *cur_node = list->first_node;
+    while(index-1 > 0)
+    {
+        cur_node = cur_node->next;
+        index--;
+    }
+
+    struct node *node_to_destroy = cur_node->next;
+    struct node *cur_next = cur_node->next->next;
+
+    void *data = node_to_destroy->data;
+
+    free(node_to_destroy);
+
+    cur_node->next = cur_next;
+    list->size--;
+
+    return data;
+}
+
+//Destroy all the nodes and the data
+static void node_destroy(struct node *node)
+{
+    if(node != NULL)
+    {
+        node_destroy(node->next);
+        node->destroy_data(node->data);
+        free(node);
+    }
+}
+
+//Destroy list
+void list_destroy(struct list *list)
+{
+    if(list != NULL)
+    {
+        node_destroy(list->first_node);
+        free(list);
+    }
+}
