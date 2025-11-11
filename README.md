@@ -141,8 +141,7 @@ int main()
     list_insert_back(l, x, free_int);
 
     int *val = list_get_at(l, 0);
-    printf("Value: %d
-", *val);
+    printf("Value: %d", *val);
 
     list_destroy(l);
 }
